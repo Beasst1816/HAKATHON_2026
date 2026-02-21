@@ -1,0 +1,62 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - FleetFlow{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2 class="mb-0">{{ title }}</h2>
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" name="name" id="name" class="form-control" value="{{ vehicle.name|default:'' }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="model_name" class="form-label">Model</label>
+        <input type="text" name="model_name" id="model_name" class="form-control" value="{{ vehicle.model_name|default:'' }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="license_plate" class="form-label">License Plate</label>
+        <input type="text" name="license_plate" id="license_plate" class="form-control" value="{{ vehicle.license_plate|default:'' }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="vehicle_type" class="form-label">Vehicle Type</label>
+        <select name="vehicle_type" id="vehicle_type" class="form-select" required>
+          <option value="TRUCK" {% if vehicle.vehicle_type == 'TRUCK' %}selected{% endif %}>Truck</option>
+          <option value="VAN" {% if vehicle.vehicle_type == 'VAN' %}selected{% endif %}>Van</option>
+          <option value="BIKE" {% if vehicle.vehicle_type == 'BIKE' %}selected{% endif %}>Bike</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="max_load_capacity" class="form-label">Max Load Capacity (kg)</label>
+        <input type="number" step="0.01" name="max_load_capacity" id="max_load_capacity" class="form-control" value="{{ vehicle.max_load_capacity|default:'' }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="odometer" class="form-label">Odometer (km)</label>
+        <input type="number" step="0.01" name="odometer" id="odometer" class="form-control" value="{{ vehicle.odometer|default:0 }}" required>
+      </div>
+      {% if vehicle %}
+      <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select name="status" id="status" class="form-select">
+          <option value="AVAILABLE" {% if vehicle.status == 'AVAILABLE' %}selected{% endif %}>Available</option>
+          <option value="ON_TRIP" {% if vehicle.status == 'ON_TRIP' %}selected{% endif %}>On Trip</option>
+          <option value="IN_SHOP" {% if vehicle.status == 'IN_SHOP' %}selected{% endif %}>In Shop</option>
+          <option value="OUT_OF_SERVICE" {% if vehicle.status == 'OUT_OF_SERVICE' %}selected{% endif %}>Out of Service</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label class="form-label">
+          <input type="checkbox" name="is_out_of_service" {% if vehicle.is_out_of_service %}checked{% endif %}> Out of Service
+        </label>
+      </div>
+      {% endif %}
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'fleet:vehicle_list' %}" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

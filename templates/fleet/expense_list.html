@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Expenses & Fuel - FleetFlow{% endblock %}
+{% block content %}
+<h1 class="mb-4">Expense & Fuel Logging</h1>
+<div class="mb-3"><a href="{% url 'fleet:expense_create' %}" class="btn btn-primary">Log Expense</a></div>
+<h5 class="mb-2">Total Operational Cost by Vehicle</h5>
+<div class="row g-2 mb-4">
+  {% for item in vehicle_costs_list %}
+  <div class="col-md-3"><div class="card"><div class="card-body py-2"><strong>{{ item.vehicle.name }}</strong><br>${{ item.cost|floatformat:2 }}</div></div></div>
+  {% endfor %}
+</div>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead><tr><th>Vehicle</th><th>Type</th><th>Amount</th><th>Liters</th><th>Date</th><th>Description</th></tr></thead>
+    <tbody>
+      {% for e in expenses %}
+      <tr>
+        <td>{{ e.vehicle.name }} ({{ e.vehicle.license_plate }})</td>
+        <td><span class="badge bg-{% if e.expense_type == 'FUEL' %}primary{% else %}secondary{% endif %}">{{ e.get_expense_type_display }}</span></td>
+        <td>${{ e.amount|floatformat:2 }}</td>
+        <td>{% if e.liters %}{{ e.liters }} L{% else %}-{% endif %}</td>
+        <td>{{ e.date|date:"M d, Y" }}</td>
+        <td>{{ e.description|default:"-" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-center text-muted">No expenses.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

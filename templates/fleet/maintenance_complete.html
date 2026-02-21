@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Complete Maintenance - FleetFlow{% endblock %}
+{% block content %}
+<h1 class="mb-4">Mark Maintenance Complete</h1>
+<p>Mark <strong>{{ log.vehicle.name }}</strong> - {{ log.description }} as complete? Vehicle will return to Available if no other pending maintenance.</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary">Mark Complete</button>
+  <a href="{% url 'fleet:maintenance_list' %}" class="btn btn-outline-secondary">Cancel</a>
+</form>
+{% endblock %}

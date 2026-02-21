@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Analytics & Reports - FleetFlow{% endblock %}
+{% block content %}
+<h1 class="mb-4">Operational Analytics & Financial Reports</h1>
+<div class="mb-3">
+  <a href="{% url 'fleet:export_csv' %}" class="btn btn-success">Export CSV</a>
+  <a href="{% url 'fleet:export_pdf' %}" class="btn btn-outline-secondary">Export PDF</a>
+</div>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead><tr><th>Vehicle</th><th>Type</th><th>Status</th><th>Total Operational Cost</th><th>Completed Trips</th><th>Odometer</th></tr></thead>
+    <tbody>
+      {% for a in analytics %}
+      <tr>
+        <td>{{ a.vehicle.name }}</td>
+        <td>{{ a.vehicle.get_vehicle_type_display }}</td>
+        <td>{{ a.vehicle.get_status_display }}</td>
+        <td>${{ a.total_operational_cost|floatformat:2 }}</td>
+        <td>{{ a.completed_trips }}</td>
+        <td>{{ a.odometer|floatformat:0 }} km</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-center text-muted">No data.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

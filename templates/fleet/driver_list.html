@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Driver Profiles - FleetFlow{% endblock %}
+{% block content %}
+<h1 class="mb-4">Driver Performance & Safety Profiles</h1>
+<div class="mb-3"><a href="{% url 'fleet:driver_create' %}" class="btn btn-primary">Add Driver</a></div>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead><tr><th>Name</th><th>Email</th><th>License</th><th>Expiry</th><th>Status</th><th>Safety Score</th><th>Completion %</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for d in drivers %}
+      <tr>
+        <td>{{ d.name }}</td>
+        <td>{{ d.email }}</td>
+        <td>{{ d.license_number }}</td>
+        <td>{{ d.license_expiry|date:"Y-m-d" }}{% if d.is_license_expired %} <i class="bi bi-exclamation-triangle text-danger"></i>{% endif %}</td>
+        <td><span class="badge bg-{% if d.status == 'ON_DUTY' %}success{% elif d.status == 'SUSPENDED' %}danger{% else %}secondary{% endif %}">{{ d.get_status_display }}</span></td>
+        <td>{{ d.safety_score|floatformat:1 }}</td>
+        <td>{{ d.trip_completion_rate|floatformat:1 }}%</td>
+        <td><a href="{% url 'fleet:driver_edit' d.pk %}" class="btn btn-sm btn-outline-primary">Edit</a> <a href="{% url 'fleet:driver_delete' d.pk %}" class="btn btn-sm btn-outline-danger">Delete</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="8" class="text-center text-muted">No drivers.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

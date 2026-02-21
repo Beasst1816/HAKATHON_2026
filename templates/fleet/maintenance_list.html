@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Maintenance Logs - FleetFlow{% endblock %}
+{% block content %}
+<h1 class="mb-4">Maintenance & Service Logs</h1>
+<div class="mb-3"><a href="{% url 'fleet:maintenance_create' %}" class="btn btn-primary">Add Maintenance Log</a></div>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead><tr><th>Vehicle</th><th>Service Type</th><th>Description</th><th>Cost</th><th>Date</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for log in logs %}
+      <tr>
+        <td>{{ log.vehicle.name }} ({{ log.vehicle.license_plate }})</td>
+        <td><span class="badge bg-{% if log.service_type == 'PREVENTATIVE' %}success{% else %}warning{% endif %}">{{ log.get_service_type_display }}</span></td>
+        <td>{{ log.description }}</td>
+        <td>${{ log.cost|floatformat:2 }}</td>
+        <td>{{ log.date|date:"M d, Y" }}</td>
+        <td>{% if log.completed_at %}<span class="badge bg-success">Completed</span>{% else %}<span class="badge bg-warning">In Progress</span>{% endif %}</td>
+        <td>{% if not log.completed_at %}<a href="{% url 'fleet:maintenance_complete' log.pk %}" class="btn btn-sm btn-outline-primary">Mark Complete</a>{% endif %}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="text-center text-muted">No maintenance logs.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

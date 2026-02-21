@@ -1,0 +1,183 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}FleetFlow{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+  {% if user.is_authenticated %}
+  <div class="sidebar-toggle" id="sidebarToggle">
+    <span class="dot"></span>
+    <span class="dot"></span>
+    <span class="dot"></span>
+  </div>
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  {% endif %}
+  <div class="{% if user.is_authenticated %}d-flex{% endif %}">
+    {% if user.is_authenticated %}
+    <nav class="sidebar col-md-2 col-lg-2 d-md-block p-3" id="sidebar">
+      <div class="d-flex justify-content-between align-items-center mb-3 d-md-none">
+        <div class="logo-container mb-0">
+          <img src="{% static 'images/fleetflow-logo.png' %}" alt="FleetFlow Logo" style="max-width: 120px;">
+        </div>
+        <button class="btn btn-sm text-white" id="closeSidebar" style="background: transparent; border: none; font-size: 1.5rem;">&times;</button>
+      </div>
+      <div class="logo-container d-none d-md-block">
+        <img src="{% static 'images/fleetflow-logo.png' %}" alt="FleetFlow Logo">
+      </div>
+      <ul class="nav flex-column">
+        <li class="nav-item">
+          <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'fleet:dashboard' %}">
+            <i class="bi bi-speedometer2 me-2"></i>Command Center
+          </a>
+        </li>
+        <li class="nav-item">
+          <div class="nav-section-header {% if 'vehicle' in request.resolver_match.url_name or 'trip' in request.resolver_match.url_name or 'maintenance' in request.resolver_match.url_name %}not collapsed{% else %}collapsed{% endif %}" data-toggle="collapse" data-target="#fleetSection">
+            <span class="nav-link d-flex justify-content-between align-items-center" style="cursor: pointer;">
+              <span><i class="bi bi-truck me-2"></i>Fleet Management</span>
+              <span class="dots-toggle">⋯</span>
+            </span>
+          </div>
+          <div class="collapse {% if 'vehicle' in request.resolver_match.url_name or 'trip' in request.resolver_match.url_name or 'maintenance' in request.resolver_match.url_name %}show{% endif %}" id="fleetSection">
+            <ul class="nav flex-column ms-3">
+              <li class="nav-item"><a class="nav-link {% if 'vehicle' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'fleet:vehicle_list' %}"><i class="bi bi-circle me-2" style="font-size: 0.6rem;"></i>Vehicle Registry</a></li>
+              <li class="nav-item"><a class="nav-link {% if 'trip' in request.resolver_match.url_name and 'dispatch' not in request.resolver_match.url_name and 'complete' not in request.resolver_match.url_name and 'cancel' not in request.resolver_match.url_name %}active{% endif %}" href="{% url 'fleet:trip_list' %}"><i class="bi bi-circle me-2" style="font-size: 0.6rem;"></i>Trip Dispatcher</a></li>
+              <li class="nav-item"><a class="nav-link {% if 'maintenance' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'fleet:maintenance_list' %}"><i class="bi bi-circle me-2" style="font-size: 0.6rem;"></i>Maintenance Logs</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item">
+          <div class="nav-section-header {% if 'expense' in request.resolver_match.url_name or 'reports' in request.resolver_match.url_name %}not collapsed{% else %}collapsed{% endif %}" data-toggle="collapse" data-target="#financialSection">
+            <span class="nav-link d-flex justify-content-between align-items-center" style="cursor: pointer;">
+              <span><i class="bi bi-currency-dollar me-2"></i>Financial</span>
+              <span class="dots-toggle">⋯</span>
+            </span>
+          </div>
+          <div class="collapse {% if 'expense' in request.resolver_match.url_name or 'reports' in request.resolver_match.url_name %}show{% endif %}" id="financialSection">
+            <ul class="nav flex-column ms-3">
+              <li class="nav-item"><a class="nav-link {% if 'expense' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'fleet:expense_list' %}"><i class="bi bi-circle me-2" style="font-size: 0.6rem;"></i>Expenses & Fuel</a></li>
+              <li class="nav-item"><a class="nav-link {% if 'reports' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'fleet:reports' %}"><i class="bi bi-circle me-2" style="font-size: 0.6rem;"></i>Analytics & Reports</a></li>
+            </ul>
+          </div>
+        </li>
+        <li class="nav-item">
+          <div class="nav-section-header {% if 'driver' in request.resolver_match.url_name %}not collapsed{% else %}collapsed{% endif %}" data-toggle="collapse" data-target="#personnelSection">
+            <span class="nav-link d-flex justify-content-between align-items-center" style="cursor: pointer;">
+              <span><i class="bi bi-people me-2"></i>Personnel</span>
+              <span class="dots-toggle">⋯</span>
+            </span>
+          </div>
+          <div class="collapse {% if 'driver' in request.resolver_match.url_name %}show{% endif %}" id="personnelSection">
+            <ul class="nav flex-column ms-3">
+              <li class="nav-item"><a class="nav-link {% if 'driver' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'fleet:driver_list' %}"><i class="bi bi-circle me-2" style="font-size: 0.6rem;"></i>Driver Profiles</a></li>
+            </ul>
+          </div>
+        </li>
+      </ul>
+      <hr class="border-secondary">
+      <div class="text-white-50 small px-3">{{ user.get_full_name|default:user.username }}</div>
+      <div class="text-white-50 small px-3">{{ user.get_role_display }}</div>
+      <a class="nav-link text-white-50" href="{% url 'fleet:logout' %}"><i class="bi bi-box-arrow-right me-2"></i>Sign Out</a>
+    </nav>
+    {% endif %}
+    <main class="{% if user.is_authenticated %}main-content flex-grow-1 p-4{% else %}container py-5{% endif %}">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const sidebarToggle = document.getElementById('sidebarToggle');
+      const sidebar = document.getElementById('sidebar');
+      const sidebarOverlay = document.getElementById('sidebarOverlay');
+      
+      if (sidebarToggle && sidebar && sidebarOverlay) {
+        const closeSidebar = document.getElementById('closeSidebar');
+        
+        function openSidebar() {
+          sidebar.classList.add('show');
+          sidebarOverlay.classList.add('show');
+        }
+        
+        function closeSidebarFunc() {
+          sidebar.classList.remove('show');
+          sidebarOverlay.classList.remove('show');
+        }
+        
+        sidebarToggle.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openSidebar();
+        });
+        
+        if (closeSidebar) {
+          closeSidebar.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeSidebarFunc();
+          });
+        }
+        
+        sidebarOverlay.addEventListener('click', function() {
+          closeSidebarFunc();
+        });
+        
+        document.addEventListener('click', function(e) {
+          if (window.innerWidth < 768) {
+            if (!sidebar.contains(e.target) && !sidebarToggle.contains(e.target)) {
+              closeSidebarFunc();
+            }
+          }
+        });
+        
+        sidebar.addEventListener('click', function(e) {
+          e.stopPropagation();
+        });
+        
+        document.addEventListener('keydown', function(e) {
+          if (e.key === 'Escape' && sidebar.classList.contains('show')) {
+            closeSidebarFunc();
+          }
+        });
+      }
+      
+      document.querySelectorAll('.nav-section-header').forEach(header => {
+        header.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          const targetId = this.getAttribute('data-target');
+          const target = document.querySelector(targetId);
+          
+          if (target) {
+            const isExpanded = this.classList.contains('not') && !this.classList.contains('collapsed');
+            const bsCollapse = new bootstrap.Collapse(target, { toggle: false });
+            
+            if (isExpanded) {
+              bsCollapse.hide();
+              this.classList.add('collapsed');
+              this.classList.remove('not');
+            } else {
+              bsCollapse.show();
+              this.classList.remove('collapsed');
+              this.classList.add('not');
+            }
+          }
+        });
+      });
+    });
+  </script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Trip Dispatcher - FleetFlow{% endblock %}
+{% block content %}
+<h1 class="mb-4">Trip Dispatcher & Management</h1>
+<div class="mb-3"><a href="{% url 'fleet:trip_create' %}" class="btn btn-primary">Create Trip</a></div>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead><tr><th>Vehicle</th><th>Driver</th><th>Route</th><th>Cargo (kg)</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for t in trips %}
+      <tr>
+        <td>{{ t.vehicle.name }} ({{ t.vehicle.license_plate }})</td>
+        <td>{{ t.driver.name }}</td>
+        <td>{{ t.origin }} → {{ t.destination }}</td>
+        <td>{{ t.cargo_weight }}</td>
+        <td><span class="badge bg-{% if t.status == 'DRAFT' %}secondary{% elif t.status == 'DISPATCHED' %}primary{% elif t.status == 'COMPLETED' %}success{% else %}dark{% endif %}">{{ t.get_status_display }}</span></td>
+        <td>
+          {% if t.status == 'DRAFT' %}<a href="{% url 'fleet:trip_dispatch' t.pk %}" class="btn btn-sm btn-success">Dispatch</a>{% endif %}
+          {% if t.status == 'DISPATCHED' %}<a href="{% url 'fleet:trip_complete' t.pk %}" class="btn btn-sm btn-primary">Complete</a>{% endif %}
+          {% if t.status != 'COMPLETED' and t.status != 'CANCELLED' %}<a href="{% url 'fleet:trip_cancel' t.pk %}" class="btn btn-sm btn-outline-danger">Cancel</a>{% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6" class="text-center text-muted">No trips found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

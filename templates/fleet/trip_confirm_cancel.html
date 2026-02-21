@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Cancel Trip - FleetFlow{% endblock %}
+{% block content %}
+<h1 class="mb-4">Cancel Trip</h1>
+<p>Are you sure you want to cancel this trip ({{ trip.origin }} → {{ trip.destination }})?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-danger">Cancel Trip</button>
+  <a href="{% url 'fleet:trip_list' %}" class="btn btn-outline-secondary">Back</a>
+</form>
+{% endblock %}

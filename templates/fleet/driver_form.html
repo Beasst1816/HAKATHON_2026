@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% block title %}{{ title }} - FleetFlow{% endblock %}
+{% block content %}
+<div class="card">
+  <div class="card-header">
+    <h2 class="mb-0">{{ title }}</h2>
+  </div>
+  <div class="card-body">
+    <form method="post">
+      {% csrf_token %}
+      <div class="mb-3">
+        <label for="name" class="form-label">Name</label>
+        <input type="text" name="name" id="name" class="form-control" value="{{ driver.name|default:'' }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="email" class="form-label">Email</label>
+        <input type="email" name="email" id="email" class="form-control" value="{{ driver.email|default:'' }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="phone" class="form-label">Phone</label>
+        <input type="text" name="phone" id="phone" class="form-control" value="{{ driver.phone|default:'' }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="license_number" class="form-label">License Number</label>
+        <input type="text" name="license_number" id="license_number" class="form-control" value="{{ driver.license_number|default:'' }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="license_category" class="form-label">License Category</label>
+        <input type="text" name="license_category" id="license_category" class="form-control" value="{{ driver.license_category|default:'' }}" required>
+      </div>
+      <div class="mb-3">
+        <label for="license_expiry" class="form-label">License Expiry</label>
+        <input type="date" name="license_expiry" id="license_expiry" class="form-control" value="{{ driver.license_expiry|date:'Y-m-d'|default:'' }}" required>
+      </div>
+      {% if driver %}
+      <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <select name="status" id="status" class="form-select">
+          <option value="ON_DUTY" {% if driver.status == 'ON_DUTY' %}selected{% endif %}>On Duty</option>
+          <option value="OFF_DUTY" {% if driver.status == 'OFF_DUTY' %}selected{% endif %}>Off Duty</option>
+          <option value="SUSPENDED" {% if driver.status == 'SUSPENDED' %}selected{% endif %}>Suspended</option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="safety_score" class="form-label">Safety Score (0-100)</label>
+        <input type="number" step="0.1" min="0" max="100" name="safety_score" id="safety_score" class="form-control" value="{{ driver.safety_score|default:100 }}">
+      </div>
+      {% endif %}
+      <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Save</button>
+        <a href="{% url 'fleet:driver_list' %}" class="btn btn-outline-secondary">Cancel</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

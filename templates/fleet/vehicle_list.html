@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Vehicle Registry - FleetFlow{% endblock %}
+{% block content %}
+<h1 class="mb-4">Vehicle Registry</h1>
+<div class="mb-3">
+  <a href="{% url 'fleet:vehicle_create' %}" class="btn btn-primary">Add Vehicle</a>
+</div>
+<form method="get" class="row g-2 mb-3">
+  <div class="col-auto">
+    <select name="vehicle_type" class="form-select form-select-sm">
+      <option value="">All Types</option>
+      <option value="TRUCK" {% if request.GET.vehicle_type == 'TRUCK' %}selected{% endif %}>Truck</option>
+      <option value="VAN" {% if request.GET.vehicle_type == 'VAN' %}selected{% endif %}>Van</option>
+      <option value="BIKE" {% if request.GET.vehicle_type == 'BIKE' %}selected{% endif %}>Bike</option>
+    </select>
+  </div>
+  <div class="col-auto">
+    <select name="status" class="form-select form-select-sm">
+      <option value="">All Statuses</option>
+      <option value="AVAILABLE" {% if request.GET.status == 'AVAILABLE' %}selected{% endif %}>Available</option>
+      <option value="ON_TRIP" {% if request.GET.status == 'ON_TRIP' %}selected{% endif %}>On Trip</option>
+      <option value="IN_SHOP" {% if request.GET.status == 'IN_SHOP' %}selected{% endif %}>In Shop</option>
+      <option value="OUT_OF_SERVICE" {% if request.GET.status == 'OUT_OF_SERVICE' %}selected{% endif %}>Out of Service</option>
+    </select>
+  </div>
+  <div class="col-auto"><button type="submit" class="btn btn-sm btn-outline-secondary">Filter</button></div>
+</form>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead><tr><th>Name / Model</th><th>License Plate</th><th>Type</th><th>Max Capacity</th><th>Odometer</th><th>Status</th><th>Actions</th></tr></thead>
+    <tbody>
+      {% for v in vehicles %}
+      <tr>
+        <td>{{ v.name }} {{ v.model_name }}</td>
+        <td>{{ v.license_plate }}</td>
+        <td>{{ v.get_vehicle_type_display }}</td>
+        <td>{{ v.max_load_capacity }} kg</td>
+        <td>{{ v.odometer|floatformat:0 }} km</td>
+        <td><span class="badge bg-{% if v.status == 'AVAILABLE' %}success{% elif v.status == 'ON_TRIP' %}primary{% elif v.status == 'IN_SHOP' %}warning{% else %}secondary{% endif %}">{{ v.get_status_display }}</span></td>
+        <td>
+          <a href="{% url 'fleet:vehicle_edit' v.pk %}" class="btn btn-sm btn-outline-primary">Edit</a>
+          <a href="{% url 'fleet:vehicle_delete' v.pk %}" class="btn btn-sm btn-outline-danger">Delete</a>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="7" class="text-center text-muted">No vehicles found.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

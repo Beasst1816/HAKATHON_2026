@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FleetFlow Command Center</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="dashboard-container">
+    <header class="dashboard-header">
+        <h1>Command Center</h1>
+        <p>High-level fleet oversight</p>
+    </header>
+
+    <section class="filters-section">
+        <select id="vehicle-type">
+            <option value="all">All Vehicles</option>
+            <option value="truck">Truck</option>
+            <option value="van">Van</option>
+            <option value="bike">Bike</option>
+        </select>
+        
+        <select id="status">
+            <option value="all">All Statuses</option>
+            <option value="on-trip">On Trip</option>
+            <option value="available">Available</option>
+            <option value="in-shop">In Shop</option>
+        </select>
+
+        <select id="region">
+            <option value="all">All Regions</option>
+            <option value="north">North Region</option>
+            <option value="south">South Region</option>
+        </select>
+    </section>
+
+    <section class="kpi-grid">
+        <div class="kpi-card">
+            <div class="kpi-icon">🚚</div>
+            <div class="kpi-info">
+                <h3>Active Fleet</h3>
+                <p class="kpi-value" id="kpi-active">24</p>
+                <span class="kpi-desc">Vehicles "On Trip"</span>
+            </div>
+        </div>
+
+        <div class="kpi-card alert">
+            <div class="kpi-icon">🛠️</div>
+            <div class="kpi-info">
+                <h3>Maintenance Alerts</h3>
+                <p class="kpi-value" id="kpi-maintenance">3</p>
+                <span class="kpi-desc">Marked "In Shop"</span>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-icon">📊</div>
+            <div class="kpi-info">
+                <h3>Utilization Rate</h3>
+                <p class="kpi-value" id="kpi-utilization">85%</p>
+                <span class="kpi-desc">Assigned vs. Idle</span>
+            </div>
+        </div>
+
+        <div class="kpi-card">
+            <div class="kpi-icon">📦</div>
+            <div class="kpi-info">
+                <h3>Pending Cargo</h3>
+                <p class="kpi-value" id="kpi-pending">12</p>
+                <span class="kpi-desc">Awaiting assignment</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+</body>
+</html>

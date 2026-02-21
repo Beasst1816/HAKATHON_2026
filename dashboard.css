@@ -139,7 +139,7 @@ body {
 }
 
 .placeholder {
-    padding: 80px;
+    padding: 81px;
     text-align: center;
     color: var(--text-muted);
 }

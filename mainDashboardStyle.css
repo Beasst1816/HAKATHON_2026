@@ -190,3 +190,135 @@ body {
         width: 100%;
     }
 }
+
+
+/* --- Split Layout for Forms and Tables --- */
+.split-layout {
+    display: flex;
+    gap: 30px;
+    align-items: flex-start;
+}
+
+/* --- Form Panel (Left Side) --- */
+.form-panel {
+    flex: 0 0 300px; /* Fixed width for the form */
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    background-color: var(--panel-bg);
+}
+
+.form-panel h3 {
+    color: var(--text-main);
+    font-size: 18px;
+    margin-bottom: 20px;
+    font-weight: normal;
+    font-style: italic; /* Matches the handwriting style of the wireframe */
+}
+
+.wireframe-form .form-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 15px;
+}
+
+.wireframe-form label {
+    color: var(--text-main);
+    font-size: 14px;
+    flex: 0 0 40%;
+}
+
+.wireframe-form input {
+    flex: 1;
+    background: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 8px 10px;
+    color: var(--text-main);
+    outline: none;
+    transition: border-color 0.2s;
+    width: 100%;
+}
+
+.wireframe-form input:focus {
+    border-color: var(--accent-green);
+}
+
+.form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 25px;
+}
+
+.submit-btn, .cancel-btn {
+    background: transparent;
+    border: 1px solid var(--border-color);
+    padding: 8px 16px;
+    border-radius: 6px;
+    color: var(--text-main);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.submit-btn {
+    border-color: var(--accent-green);
+    color: var(--accent-green);
+}
+
+.submit-btn:hover {
+    background-color: rgba(79, 209, 197, 0.1);
+}
+
+.cancel-btn {
+    border-color: var(--accent-pink);
+    color: var(--accent-pink);
+}
+
+.cancel-btn:hover {
+    background-color: rgba(252, 129, 129, 0.1);
+}
+
+/* --- Table Panel (Right Side) --- */
+.table-panel {
+    flex: 1; /* Takes up the remaining space */
+    border: 2px solid var(--border-color);
+    border-radius: 16px;
+    padding: 20px;
+    background-color: var(--panel-bg);
+    overflow-x: auto;
+}
+
+.wireframe-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+}
+
+.wireframe-table th {
+    color: var(--accent-pink); /* Pinkish headers from the wireframe */
+    font-weight: normal;
+    padding-bottom: 15px;
+    border-bottom: 1px solid var(--border-color);
+    font-style: italic;
+}
+
+.wireframe-table td {
+    padding: 12px 0;
+    color: var(--text-main);
+}
+
+.status-done {
+    color: var(--accent-green); /* Highlights the 'Done' status */
+}
+
+/* --- Responsive Adjustments for Split Layout --- */
+@media (max-width: 1024px) {
+    .split-layout {
+        flex-direction: column;
+    }
+    .form-panel {
+        flex: 1;
+        width: 100%;
+    }
+}
